@@ -41,33 +41,7 @@ class GridApp(tk.Frame):
         label3.grid(row=1,column=1,sticky='news',padx=5,pady=5)
 
 
-class BoundingBall:
-    def __init__(self,x,y,width,height):
-        self.x=x
-        self.y=y
-        self.vx=4
-        self.vy=4
-        self.width=width
-        self.height=height
-
-    def tick(self):
-        self.x+=self.vx
-        self.y+=self.vy
-        self.update_x_bounce()
-        self.update_y_bounce()
-    
-    def update_x_bounce(self):
-        if self.x < 0:
-            self.vx = abs(self.vx)
-        elif self.x >self.width:
-            self.vx = -abs(self.vx)
-
-    def update_y_bounce(self):
-        if self.y < 0:
-            self.vy = abs(self.vy)
-        elif self.y >self.height:
-            self.vy = -abs(self.vy)
-
+import bounding_ball as bb
 
 class GraphicsApp(tk.Frame):
     def __init__(self,master=None):
@@ -81,10 +55,10 @@ class GraphicsApp(tk.Frame):
         for i in range(100):
             x = random.randint(0,width)
             y= random.randint(0,height)
-            self.balls.append(BoundingBall(x,y, width, height))
+            self.balls.append(bb.BoundingBall(x,y, width, height))
 
 
-        self.ball = BoundingBall(10,10,width,height )
+        self.ball = bb.BoundingBall(10,10,width,height )
 
         self.c = tk.Canvas(self)
         self.c.place(x=0,y=0, width=width, height=height)
