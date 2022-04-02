@@ -1,7 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import math
-import PySimpleGUI as sg
 
 na = np.array(list(range(100)))
 print(na[na%5==0])
