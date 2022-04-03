@@ -5,6 +5,15 @@ from bounding_ball import *
 from player import *
 
 
+class BallManager:
+    def __init__(self):
+        self.balls = []
+    def tick(self):
+        for b in self.balls:
+            b.tick()
+    def draw(self):
+        return
+
 class GraphicsApp(tk.Frame):
     def __init__(self, master=None):
         canvas_width = 500
@@ -13,6 +22,7 @@ class GraphicsApp(tk.Frame):
                           height=canvas_height)
         self.counter = 0
         self.key_state = KeyState(self)
+        self.ball_mgr=BallManager()
 
         self.balls = []
         for i in range(100):
