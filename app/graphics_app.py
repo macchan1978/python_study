@@ -1,4 +1,5 @@
 import tkinter as tk
+from field import Field
 from key_state import KeyState
 from player import Player
 from ball_manager import BallManager
@@ -6,26 +7,28 @@ from ball_manager import BallManager
 
 class GraphicsApp(tk.Frame):
     def __init__(self, master=None):
-        canvas_width = 500
-        canvas_height = 400
+        self.field = Field(500, 400)
         tk.Frame.__init__(self, master,
-                          width=canvas_width,
-                          height=canvas_height)
+                          width=self.field.width,
+                          height=self.field.height)
+        self.canvas = tk.Canvas(self)
+        self.canvas.place(x=0, y=0, width=self.field.width, height=self.field.height)
+
         self.counter = 0
         self.key_state = KeyState(self)
-        self.ball_mgr = BallManager(canvas_width, canvas_height)
+        self.ball_mgr = BallManager(self.field)
 
         self.player = Player(50, 50)
 
-        self.canvas = tk.Canvas(self)
-        self.canvas.place(x=0, y=0, width=canvas_width, height=canvas_height)
 
         self.focus_set()
         self.update_clock()
 
+
     def run(self):
         self.pack()
         self.mainloop()
+        # なぜかここで呼ぶと例外が出る
         # self.update_clock()
 
     def update_clock(self):

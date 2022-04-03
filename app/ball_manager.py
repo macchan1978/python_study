@@ -6,21 +6,16 @@ import tk_shape
 
 
 class BallManager:
-    def __init__(self, width, height):
-        self.width = width
-        self.height = height
+    def __init__(self, field: Field):
         self.balls = []
-        for i in range(0):
-            x = random.randint(0, width)
-            y = random.randint(0, height)
-            self.balls.append(BoundingBall(x, y, width, height))
+        self.field = field
 
     def tick(self):
         for b in self.balls:
             b.tick()
 
     def shot(self, x, y):
-        self.balls.append(BoundingBall(x, y, self.width, self.height))
+        self.balls.append(BoundingBall(x, y, self.field))
 
     def draw(self, canvas: tk.Canvas):
         for b in self.balls:
