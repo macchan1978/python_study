@@ -47,22 +47,22 @@ class GraphicsApp(tk.Frame):
         self.c.delete('all')
 
         # ラインの描画
-        self.c.create_line(10, 30, 230, 30, width=2.0, fill='#FF0000')
+        #self.c.create_line(10, 30, 230, 30, width=2.0, fill='#FF0000')
 
         # 円の描画
         self.draw_circle()
 
         # 円の塗り潰し
-        self.c.create_oval(70, 70, 110, 110, width=0.0, fill='#00FF00')
+        #self.c.create_oval(70, 70, 110, 110, width=0.0, fill='#00FF00')
 
         # 矩形の描画
-        self.c.create_rectangle(10, 130, 50, 170, width=2.0, outline='#00A0FF')
+        #self.c.create_rectangle(10, 130, 50, 170, width=2.0, outline='#00A0FF')
 
         # 矩形の塗り潰し
-        self.c.create_rectangle(70, 130, 110, 170, width=0.0, fill='#00A0FF')
+        #self.c.create_rectangle(70, 130, 110, 170, width=0.0, fill='#00A0FF')
 
         # 文字列の表示
-        self.c.create_text(10, 200, text='Hello World %d'%self.counter, font='courier 20', anchor=tk.NW) 
+        #self.c.create_text(10, 200, text='Hello World %d'%self.counter, font='courier 20', anchor=tk.NW) 
 
     def draw_circle(self):
         for b in self.balls:
