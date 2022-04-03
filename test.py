@@ -2,8 +2,9 @@ import matplotlib.pyplot as plt
 import numpy as np
 import math
 
-na = np.array(list(range(100)))
-print(na[na%5==0])
+nums=[1,2,3,4,5,6,7]
+sq = lambda x : x*x
+print([sq(a) for a in nums if a%2==0])
 
 
 def create_bounce_array():
@@ -33,7 +34,7 @@ def test_wave_array():
     g.plot(y)
     plt.show()
 
-test_wave_array()
+#test_wave_array()
 
 def create_circle_array():
     x=[]
