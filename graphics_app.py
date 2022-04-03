@@ -12,8 +12,7 @@ class GraphicsApp(tk.Frame):
         tk.Frame.__init__(self, master, width=canvas_width,
                           height=canvas_height)
         self.counter = 0
-        self.key_name = ''
-        self.key_state = KeyState()
+        self.key_state = KeyState(self)
 
         self.balls = []
         for i in range(100):
@@ -26,32 +25,10 @@ class GraphicsApp(tk.Frame):
         self.c.place(x=0, y=0, width=canvas_width, height=canvas_height)
 
         self.update_clock()
-        self.bind("<KeyPress>", self.on_press_key)
-        self.bind("<KeyRelease>", self.on_release_key)
         self.focus_set()
 
         # self.on_draw()
 
-    def on_press_key(self, event):
-        self.key_name = event.keysym
-        key = event.keysym
-        result = KeyState()
-        if key == 'space':
-            result.button = True
-        if key == 'Left':
-            result.direction = Direction.LEFT
-        elif key == 'Down':
-            result.direction = Direction.DOWN
-        elif key == 'Right':
-            result.direction = Direction.RIGHT
-        elif key == 'Up':
-            result.direction = Direction.UP
-        self.key_state = result
-
-    def on_release_key(self, event):
-        self.key_name = event.keysym
-        result = KeyState()
-        self.key_state = result
 
     def run(self):
         self.pack()
@@ -86,7 +63,7 @@ class GraphicsApp(tk.Frame):
 
         # 文字列の表示
         self.c.create_text(10, 10, text='Hello World %d [%s]' % (
-            self.counter, self.key_name), font='courier 20', anchor=tk.NW)
+            self.counter, self.key_state.key), font='courier 20', anchor=tk.NW)
 
     def draw_circle(self):
         for b in self.balls:
