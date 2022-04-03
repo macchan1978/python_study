@@ -1,6 +1,7 @@
 from tkinter import Canvas
 from ball_manager import BallManager
 from key_state import *
+import tk_shape
 
 
 class Player:
@@ -8,7 +9,7 @@ class Player:
         self.x = x
         self.y = y
 
-    def tick(self, key: KeyState, ballMgr : BallManager):
+    def tick(self, key: KeyState, ballMgr: BallManager):
         v = 5
         vx, vy = (0, 0)
         if(key.direction == Direction.LEFT):
@@ -24,10 +25,7 @@ class Player:
         if(key.button is True):
             ballMgr.shot(self.x, self.y)
             key.button = False
-    def draw(self, canvas : Canvas):
-        canvas.create_oval(self.create_circle_shape(
-        self.x, self.y), width=0.0, fill='#5555FF')
 
-    def create_circle_shape(self, x, y):
-        radius = 20
-        return (x-radius, y-radius, x+radius, y+radius)
+    def draw(self, canvas: Canvas):
+        canvas.create_oval(
+            tk_shape.create_circle(self.x, self.y, 20), width=0.0, fill='#5555FF')

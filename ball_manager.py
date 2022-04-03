@@ -2,6 +2,7 @@ import tkinter as tk
 import random
 from bounding_ball import *
 from player import *
+import tk_shape
 
 
 class BallManager:
@@ -24,10 +25,6 @@ class BallManager:
     def draw(self, canvas: tk.Canvas):
         for b in self.balls:
             canvas.create_oval(
-                self.create_circle_shape(b.x, b.y),
+                tk_shape.create_circle(b.x, b.y, 20),
                 width=2.0,
                 outline='#00FF00')
-
-    def create_circle_shape(self, x, y):
-        radius = 20
-        return (x-radius, y-radius, x+radius, y+radius)

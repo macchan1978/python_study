@@ -1,6 +1,6 @@
 import tkinter as tk
-from bounding_ball import *
-from player import *
+from key_state import KeyState
+from player import Player
 from ball_manager import BallManager
 
 
@@ -14,6 +14,7 @@ class GraphicsApp(tk.Frame):
         self.counter = 0
         self.key_state = KeyState(self)
         self.ball_mgr = BallManager(canvas_width, canvas_height)
+
         self.player = Player(50, 50)
 
         self.canvas = tk.Canvas(self)
