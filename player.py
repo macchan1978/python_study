@@ -1,3 +1,4 @@
+from ball_manager import BallManager
 from key_state import *
 
 
@@ -6,7 +7,7 @@ class Player:
         self.x = x
         self.y = y
 
-    def tick(self, key: KeyState):
+    def tick(self, key: KeyState, ballMgr : BallManager):
         v = 5
         vx, vy = (0, 0)
         if(key.direction == Direction.LEFT):
@@ -19,3 +20,6 @@ class Player:
             vy = v
         self.x += vx
         self.y += vy
+        if(key.button is True):
+            ballMgr.shot(self.x, self.y)
+            key.button = False
