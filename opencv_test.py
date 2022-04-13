@@ -26,21 +26,22 @@ class ImageWindowUtil:
     cv2.Matを整列表示するためのユーティリティ
     """
 
-    def __init__(self, paddingX: int = 0, paddingY: int = 0):
+    def __init__(self, paddingX: int = 0, paddingY: int = 0, autoPadding: bool = False):
         self._images: list[tuple[str, cv2.Mat]] = []
+        self._autoPadding = autoPadding
         self._padding = [paddingX, paddingY]
-        self._location = [0, 0]
 
     def append(self, windowName: str, image: cv2.Mat) -> None:
         cv2.imshow(windowName, image)
-        cv2.moveWindow(windowName, self._location[0], self._location[1])
-        for i, p in enumerate(self._padding):
-            self._location[i] += p
-        print(f'new window Location : {self._location[0]} {self._location[1]}')
+        #cv2.moveWindow(windowName, self._location[0], self._location[1])
         self._images.append((windowName, image))
 
-        pass
-    pass
+        divNum = len(self._images) if self._autoPadding else 1
+        padding = [p//divNum for p in self._padding]
+        for i, img in enumerate(self._images):
+            x = padding[0]*i
+            y = padding[1]*i
+            cv2.moveWindow(img[0], x, y)
 
 
 def copyPasteImage(src: cv2.Mat, dst: cv2.Mat, x: int, y: int):
@@ -50,19 +51,40 @@ def copyPasteImage(src: cv2.Mat, dst: cv2.Mat, x: int, y: int):
 
 
 imgUtil = ImageWindowUtil(paddingX=50, paddingY=30)
-img = cv2.imread('images/cat_image.jpeg')
-print(img.shape)
-print(f'dtype : {img.dtype}')
-imgUtil.append('cat', img)
-eye = img[480:630, 450:630].copy()
-imgUtil.append('eye', eye)
-for i in range(10):
-    x, y = random.randint(1, 1000), random.randint(1, 1000)
-    copyPasteImage(eye, img, x, y)
+img = cv2.imread('images/soccer.jpg')
+imgUtil.append('soccer', img)
+b, g, r = cv2.split(img)
 
-imgUtil.append('test', img)
+# imgUtil.append('soccer-R', r)
+# imgUtil.append('soccer-G', g)
+# imgUtil.append('soccer-B', b)
+img2 = cv2.merge((b, g, r))
+imgUtil.append('soccer-BRSwap', img2)
+g[:,:]=0
+b[:,:]=0
+img3 = cv2.merge((b, g, r))
+imgUtil.append('soccer-RedOnly', img3)
+img4 = cv2.copyMakeBorder(img,150,150,150,150,cv2.BORDER_REFLECT_101)
+imgUtil.append('soccer-border', img4)
 cv2.waitKey(0)
 exit()
+
+
+def catEyeTest():
+    imgUtil = ImageWindowUtil(paddingX=50, paddingY=30)
+    img = cv2.imread('images/cat_image.jpeg')
+    print(img.shape)
+    print(f'dtype : {img.dtype}')
+    imgUtil.append('cat', img)
+    eye = img[480:630, 450:630].copy()
+    imgUtil.append('eye', eye)
+    for i in range(43):
+        x, y = random.randint(1, 1000), random.randint(1, 1000)
+        copyPasteImage(eye, img, x, y)
+
+    imgUtil.append('test', img)
+    cv2.waitKey(0)
+    exit()
 
 # clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
 # claheApply = clahe.apply(img)
@@ -72,6 +94,7 @@ exit()
 #     ('equ',equ),
 #     ('clahe',claheApply),
 # ])
+
 
 profile = []
 for x in range(300):
