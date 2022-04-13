@@ -1,0 +1,15 @@
+
+
+    "python.autoComplete.extraPaths": [
+        "/Users/shingo/miniforge3/envs/python38/lib/python3.8/site-packages"
+    ],
+
+
+    "python.linting.pylintArgs": [
+        "--ignored-modules=numpy,cv2,matplotlib",
+        "--ignored-classes=numpy,cv2,matplotlib",
+        "--extension-pkg-whitelist=numpy,cv2,matplotlib"
+    ],
+    "python.autoComplete.addBrackets": true,
+    "python.jediEnabled": false,
+    "python.analysis.completeFunctionParens": true
