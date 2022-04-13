@@ -1,4 +1,5 @@
 from __future__ import annotations
+import random
 import cv2
 import math
 import numpy as np
@@ -21,12 +22,16 @@ def show_images(images: list[tuple[str, cv2.Mat]], destroy_all=True):
 
 
 class ImageWindowUtil:
-    def __init__(self, paddingX=0, paddingY=0):
+    """
+    cv2.Matを整列表示するためのユーティリティ
+    """
+
+    def __init__(self, paddingX: int = 0, paddingY: int = 0):
         self._images: list[tuple[str, cv2.Mat]] = []
         self._padding = [paddingX, paddingY]
         self._location = [0, 0]
 
-    def append(self, windowName: str, image: cv2.Mat):
+    def append(self, windowName: str, image: cv2.Mat) -> None:
         cv2.imshow(windowName, image)
         cv2.moveWindow(windowName, self._location[0], self._location[1])
         for i, p in enumerate(self._padding):
@@ -38,14 +43,23 @@ class ImageWindowUtil:
     pass
 
 
+def copyPasteImage(src: cv2.Mat, dst: cv2.Mat, x: int, y: int):
+    rows, cols, _ = src.shape
+    dst[y:y+rows, x:x+cols] = src
+    pass
+
+
 imgUtil = ImageWindowUtil(paddingX=50, paddingY=30)
 img = cv2.imread('images/cat_image.jpeg')
 print(img.shape)
 print(f'dtype : {img.dtype}')
 imgUtil.append('cat', img)
-eye = img[480:630, 450:630]
+eye = img[480:630, 450:630].copy()
 imgUtil.append('eye', eye)
-img[1000:1150, 1000:1180] = eye
+for i in range(10):
+    x, y = random.randint(1, 1000), random.randint(1, 1000)
+    copyPasteImage(eye, img, x, y)
+
 imgUtil.append('test', img)
 cv2.waitKey(0)
 exit()
