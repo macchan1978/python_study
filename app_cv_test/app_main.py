@@ -3,6 +3,7 @@ import tkinter as tk
 from tkinter import ttk
 import cv2
 from PIL import Image, ImageTk
+from pyparsing import col
 
 
 class Point2i:
@@ -56,32 +57,48 @@ class ImageWindow:
         pass
 
 
+def gridCanvas(canvas: tk.Canvas, column: int = 0, row: int = 0, columnspan: int = 1):
+    canvas.grid(column=column, row=row, columnspan=columnspan)
+    return canvas
+
+
 class PyramidTestWindow:
-    def __init__(self, parent):
+    def __init__(self, parent: tk.Tk):
         self.size = size = Size(600, 400)
         self.pyrLevel = 6
         self._windows = win = tk.Toplevel(parent)
         win.title('Pyramid Test Window')
-        frm = ttk.Frame(win, padding=10)
-        frm.grid()
-        self.label = label = ttk.Label(frm, text="Hello World!")
+
+        # 解像度変更UI
+        frameUpper = ttk.Frame(win)
+        frameUpper.pack(anchor='ne')
+
+        self.label = label = ttk.Label(frameUpper, text="Hello World!")
         label.grid(column=0, row=0)
-        incBtn = ttk.Button(frm, text="inc")
-        incBtn.grid(column=1, row=0)
-        incBtn.bind("<ButtonPress>", self.incPyr)
-        decBtn = ttk.Button(frm, text="dec")
-        decBtn.grid(column=2, row=0)
-        decBtn.bind("<ButtonPress>", self.decPyr)
-        self.canvas = canvas = tk.Canvas(
-            frm, width=size.width, height=size.height, bg="White")
-        canvas.grid(column=0, row=1, columnspan=3)
-        self.canvas2 = canvas2 = tk.Canvas(
-            frm, width=size.width, height=size.height, bg="White")
-        canvas2.grid(column=0, row=2, columnspan=3)
+
+        ttk.Button(frameUpper, text="inc",
+                   command=lambda: self.incPyr(None)
+                   ).grid(column=1, row=0)
+
+        ttk.Button(frameUpper, text="dec",
+                   command=lambda: self.decPyr(None)
+                   ).grid(column=2, row=0)
+
+        # 2枚の画像を表示するUI
+        frameLower = ttk.Frame(win)
+        frameLower.pack()
+        self.canvas = gridCanvas(tk.Canvas(
+            master=frameLower, width=size.width, height=size.height, bg="White"),
+            column=0, row=0)
+
+        self.canvas2 = gridCanvas(tk.Canvas(
+            master=frameLower, width=size.width, height=size.height, bg="White"),
+            column=1, row=0)
 
         # TODO : 画像パスのユーティリティ化
-        img = cv2.imread('app_cv_test/images/soccer.jpg')
-        #img = cv2.imread('app_cv_test/images/cat_image.jpg')
+        #img = cv2.imread('app_cv_test/images/soccer.jpg')
+        img = cv2.imread('app_cv_test/images/cat_image.jpg')
+        # 適切な縮小比率を計算
         yRatio = size.height/img.shape[0]
         xRatio = size.height/img.shape[1]
         ratio = min(1, yRatio, xRatio)
@@ -119,26 +136,43 @@ class PyramidTestWindow:
 # https://docs.python.org/3/library/tkinter.ttk.html#using-ttk
 
 
+class LayoutTestWindow:
+    def __init__(self, parent: tk.Tk):
+        self.window = window = tk.Toplevel(parent)
+        window.grid()
+
+        self.frameLeftTop = frameLeftTop = ttk.Frame(window)
+        frameLeftTop.grid(column=0, row=0)
+        ttk.Button(frameLeftTop, text="label1",).pack()
+
+        self.frameRightTop = frameRightTop = ttk.Frame(window)
+        frameRightTop.grid(column=1, row=0)
+        ttk.Button(frameRightTop, text="label2").pack()
+
+        self.frameBottom = frameBottom = ttk.Frame(window)
+        frameBottom.grid(column=0, columnspan=2, row=1)
+        ttk.Button(frameBottom, text="label3").pack()
+
+        pass
+    pass
+
+
 class CvApp():
     def __init__(self):
         self.mainWindow = tk.Tk()
         self.mainWindow.geometry('500x100')
-        self.button = tk.Button(self.mainWindow, text="channel test")
-        self.button.pack()
-        self.buttonPyr = tk.Button(self.mainWindow, text="pyramid")
-        self.buttonPyr.pack()
-        self.button.bind("<ButtonPress>", self.channelTest)
-        self.buttonPyr.bind("<ButtonPress>", self.pyramidTest)
+        ttk.Button(self.mainWindow, text="channel test",
+                  command=lambda: self.channelTest()).pack()
+        ttk.Button(self.mainWindow, text="pyramid",
+                  command=lambda: self.pyramidTest()).pack()
+        ttk.Button(self.mainWindow, text="layout",
+                  command=lambda: self.layoutTest()).pack()
         self.windows = []
 
-        pass
-
-    def pyramidTest(self, event):
+    def pyramidTest(self):
         self.windows.append(PyramidTestWindow(self.mainWindow))
 
-        pass
-
-    def channelTest(self, event):
+    def channelTest(self):
         img = cv2.imread('app_cv_test/images/soccer.jpg')
         b, g, r = cv2.split(img)
         imgRbSwap = cv2.merge((r, g, b))
@@ -147,7 +181,9 @@ class CvApp():
             self.mainWindow, img, "original_image"))
         self.windows.append(ImageWindow(
             self.mainWindow, imgRbSwap, "red_blue_swap_image"))
-        pass
+
+    def layoutTest(self):
+        self.windows.append(LayoutTestWindow(self.mainWindow))
 
     def run(self):
 
