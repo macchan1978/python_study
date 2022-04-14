@@ -22,12 +22,13 @@ class Size:
         self.width = width
         self.height = height
 
-def createImageForCanvas(src:cv2.Mat, canvas=None):
+
+def createImageForCanvas(src: cv2.Mat, canvas=None):
     img = cv2.cvtColor(src, cv2.COLOR_BGR2RGB)
     imgPil = Image.fromarray(img)
     imgTk = ImageTk.PhotoImage(imgPil)
     if(not canvas is None):
-        canvas.create_image(0,0,image=imgTk,anchor='nw')
+        canvas.create_image(0, 0, image=imgTk, anchor='nw')
     # MEMO : PhotoImageはGCされないようにfieldで保持する必要がある
     return imgTk
 
@@ -57,7 +58,8 @@ class ImageWindow:
 
 class PyramidTestWindow:
     def __init__(self, parent):
-        self.pyrLevel = 0
+        self.size = size = Size(600, 400)
+        self.pyrLevel = 6
         self._windows = win = tk.Toplevel(parent)
         win.title('Pyramid Test Window')
         frm = ttk.Frame(win, padding=10)
@@ -70,19 +72,29 @@ class PyramidTestWindow:
         decBtn = ttk.Button(frm, text="dec")
         decBtn.grid(column=2, row=0)
         decBtn.bind("<ButtonPress>", self.decPyr)
-        self.canvas = canvas = tk.Canvas(frm, width=800, height=400, bg="White")
+        self.canvas = canvas = tk.Canvas(
+            frm, width=size.width, height=size.height, bg="White")
         canvas.grid(column=0, row=1, columnspan=3)
-        self.canvas2 = canvas2 = tk.Canvas(frm, width=800, height=400, bg="White")
+        self.canvas2 = canvas2 = tk.Canvas(
+            frm, width=size.width, height=size.height, bg="White")
         canvas2.grid(column=0, row=2, columnspan=3)
 
         # TODO : 画像パスのユーティリティ化
-        self.image = cv2.imread('app_cv_test/images/soccer.jpg')
-        self.updatePyrLevelStr()
+        img = cv2.imread('app_cv_test/images/soccer.jpg')
+        #img = cv2.imread('app_cv_test/images/cat_image.jpg')
+        yRatio = size.height/img.shape[0]
+        xRatio = size.height/img.shape[1]
+        ratio = min(1, yRatio, xRatio)
+        resizedImg = cv2.resize(src=img, dsize=[0, 0], fx=ratio, fy=ratio)
 
+        # cv2.imread('app_cv_test/images/cat_image.jpg')
+        self.image = resizedImg
+        self.updatePyrLevelStr()
 
     def updatePyrLevelStr(self):
         self.label['text'] = f'Pyramid level : {self.pyrLevel}'
-        if(self.pyrLevel<0):return
+        if(self.pyrLevel < 0):
+            return
         pyrImage = self.image.copy()
         for i in range(self.pyrLevel):
             pyrImage = cv2.pyrDown(pyrImage)
