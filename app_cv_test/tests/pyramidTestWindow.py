@@ -2,7 +2,6 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
 import cv2
-from PIL import Image, ImageTk
 from common import *
 
 
