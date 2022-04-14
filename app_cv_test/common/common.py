@@ -4,6 +4,7 @@ from tkinter import ttk
 import cv2
 from PIL import Image, ImageTk
 
+from . import fluent
 
 
 
@@ -44,22 +45,24 @@ class ImageWindow:
     def draw(self, image: cv2.Mat):
         self._canvas.delete('all')
         self._canvas.create_text(0, 0, text="hello,world", anchor='nw')
-        self.imgTk = createImageForCanvas(image, self._canvas)
+        self.imgTk = fluent.setCanvasImage(image, self._canvas)
+        #self.imgTk = createImageForCanvas(image, self._canvas)
 
         pass
 
 
-def createImageForCanvas(src: cv2.Mat, canvas=None):
-    img = cv2.cvtColor(src, cv2.COLOR_BGR2RGB)
-    imgPil = Image.fromarray(img)
-    imgTk = ImageTk.PhotoImage(imgPil)
-    if(not canvas is None):
-        canvas.create_image(0, 0, image=imgTk, anchor='nw')
-    # MEMO : PhotoImageはGCされないようにfieldで保持する必要がある
-    return imgTk
+# def createImageForCanvas(src: cv2.Mat, canvas=None):
+#     img = cv2.cvtColor(src, cv2.COLOR_BGR2RGB)
+#     imgPil = Image.fromarray(img)
+#     imgTk = ImageTk.PhotoImage(imgPil)
+#     if(not canvas is None):
+#         canvas.create_image(0, 0, image=imgTk, anchor='nw')
+#     # MEMO : PhotoImageはGCされないようにfieldで保持する必要がある
+#     return imgTk
 
 
-def gridCanvas(canvas: tk.Canvas, column: int = 0, row: int = 0, columnspan: int = 1):
-    canvas.grid(column=column, row=row, columnspan=columnspan)
-    return canvas
+# # gridをfluentに使えるユーティリティ
+# def gridCanvas(canvas: tk.Widget, column: int = 0, row: int = 0, columnspan: int = 1):
+#     canvas.grid(column=column, row=row, columnspan=columnspan)
+#     return canvas
 

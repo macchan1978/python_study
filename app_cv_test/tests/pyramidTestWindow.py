@@ -5,9 +5,6 @@ import cv2
 from common import *
 
 
-
-
-
 class PyramidTestWindow:
     def __init__(self, parent: tk.Tk):
         self.size = size = Size(600, 400)
@@ -33,12 +30,14 @@ class PyramidTestWindow:
         # 2枚の画像を表示するUI
         frameLower = ttk.Frame(win)
         frameLower.pack()
-        self.canvas = gridCanvas(tk.Canvas(
-            master=frameLower, width=size.width, height=size.height, bg="White"),
+        self.canvas = fluent.grid(
+            tk.Canvas(master=frameLower, width=size.width,
+                      height=size.height, bg="White"),
             column=0, row=0)
 
-        self.canvas2 = gridCanvas(tk.Canvas(
-            master=frameLower, width=size.width, height=size.height, bg="White"),
+        self.canvas2 = fluent.grid(
+            tk.Canvas(master=frameLower, width=size.width,
+                      height=size.height, bg="White"),
             column=1, row=0)
 
         # TODO : 画像パスのユーティリティ化
@@ -61,10 +60,10 @@ class PyramidTestWindow:
         pyrImage = self.image.copy()
         for i in range(self.pyrLevel):
             pyrImage = cv2.pyrDown(pyrImage)
-        self.tkImage = createImageForCanvas(pyrImage, self.canvas)
+        self.tkImage = fluent.setCanvasImage(pyrImage, self.canvas)
         for i in range(self.pyrLevel):
             pyrImage = cv2.pyrUp(pyrImage)
-        self.tkImage2 = createImageForCanvas(pyrImage, self.canvas2)
+        self.tkImage2 = fluent.setCanvasImage(pyrImage, self.canvas2)
 
     def incPyr(self, event):
         self.pyrLevel += 1

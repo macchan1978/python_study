@@ -2,10 +2,9 @@ from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
 import cv2
-from tests.pyramidTestWindow import PyramidTestWindow
-from tests.layoutTestWindow import LayoutTestWindow
-from common import *
 
+from common import *
+from tests import *
 
 
 
