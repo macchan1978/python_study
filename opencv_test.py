@@ -86,24 +86,6 @@ def catEyeTest():
     cv2.waitKey(0)
     exit()
 
-# clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
-# claheApply = clahe.apply(img)
-# equ = cv2.equalizeHist(img)
-# show_images([
-#     ('img',img),
-#     ('equ',equ),
-#     ('clahe',claheApply),
-# ])
-
-
-profile = []
-for x in range(300):
-    profile.append(img[x, 100])
-g = plt.subplot()
-g.plot(profile)
-cv2.imshow("img", img)
-plt.show()
-cv2.destroyAllWindows()
 
 
 # -----------------------------------------------------------------------
