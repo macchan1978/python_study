@@ -22,8 +22,17 @@ class Size:
         self.width = width
         self.height = height
 
+def createImageForCanvas(src:cv2.Mat, canvas=None):
+    img = cv2.cvtColor(src, cv2.COLOR_BGR2RGB)
+    imgPil = Image.fromarray(img)
+    imgTk = ImageTk.PhotoImage(imgPil)
+    if(not canvas is None):
+        canvas.create_image(0,0,image=imgTk,anchor='nw')
+    # MEMO : PhotoImageはGCされないようにfieldで保持する必要がある
+    return imgTk
 
-class ImageWindow():
+
+class ImageWindow:
     def __init__(self, parent: tk.Tk, image: cv2.Mat, title: str = 'New Window', width: int = 0, height: int = 0):
         self.size = Size(
             width if width != 0 else image.shape[1],
@@ -41,39 +50,46 @@ class ImageWindow():
     def draw(self, image: cv2.Mat):
         self._canvas.delete('all')
         self._canvas.create_text(0, 0, text="hello,world", anchor='nw')
-
-        img = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-        imgPil = Image.fromarray(img)
-        # MEMO : PhotoImageはGCされないようにfieldで保持する必要がある
-        self.imgTk = ImageTk.PhotoImage(imgPil)
-        self._canvas.create_image(0, 0, image=self.imgTk, anchor='nw')
+        self.imgTk = createImageForCanvas(image, self._canvas)
 
         pass
 
 
-class PyramidTestWindow():
+class PyramidTestWindow:
     def __init__(self, parent):
         self.pyrLevel = 0
-        win = tk.Toplevel(parent)
+        self._windows = win = tk.Toplevel(parent)
         win.title('Pyramid Test Window')
         frm = ttk.Frame(win, padding=10)
         frm.grid()
-        label = ttk.Label(frm, text="Hello World!")
+        self.label = label = ttk.Label(frm, text="Hello World!")
         label.grid(column=0, row=0)
-        self.label = label
-        self.updatePyrLevelStr()
         incBtn = ttk.Button(frm, text="inc")
         incBtn.grid(column=1, row=0)
         incBtn.bind("<ButtonPress>", self.incPyr)
         decBtn = ttk.Button(frm, text="dec")
         decBtn.grid(column=2, row=0)
         decBtn.bind("<ButtonPress>", self.decPyr)
-        canvas = tk.Canvas(frm, width=1000, height=800, bg="White")
+        self.canvas = canvas = tk.Canvas(frm, width=800, height=400, bg="White")
         canvas.grid(column=0, row=1, columnspan=3)
-        self._windows = win
+        self.canvas2 = canvas2 = tk.Canvas(frm, width=800, height=400, bg="White")
+        canvas2.grid(column=0, row=2, columnspan=3)
+
+        # TODO : 画像パスのユーティリティ化
+        self.image = cv2.imread('app_cv_test/images/soccer.jpg')
+        self.updatePyrLevelStr()
+
 
     def updatePyrLevelStr(self):
         self.label['text'] = f'Pyramid level : {self.pyrLevel}'
+        if(self.pyrLevel<0):return
+        pyrImage = self.image.copy()
+        for i in range(self.pyrLevel):
+            pyrImage = cv2.pyrDown(pyrImage)
+        self.tkImage = createImageForCanvas(pyrImage, self.canvas)
+        for i in range(self.pyrLevel):
+            pyrImage = cv2.pyrUp(pyrImage)
+        self.tkImage2 = createImageForCanvas(pyrImage, self.canvas2)
 
     def incPyr(self, event):
         self.pyrLevel += 1
@@ -106,8 +122,6 @@ class CvApp():
         pass
 
     def pyramidTest(self, event):
-        # TODO : 画像パスのユーティリティ化
-        img = cv2.imread('app_cv_test/images/soccer.jpg')
         self.windows.append(PyramidTestWindow(self.mainWindow))
 
         pass
