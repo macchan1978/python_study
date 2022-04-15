@@ -1,6 +1,7 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
+from typing import Callable
 import cv2
 
 from common import *
@@ -11,16 +12,16 @@ class CvApp():
     def __init__(self):
         self.mainWindow = tk.Tk()
 
-        # ボタンを縦に並べておく
-        ttk.Button(
-            self.mainWindow, text="channel test", command=lambda: self.channelTest()
-        ).pack(fill="both")
-        ttk.Button(
-            self.mainWindow, text="pyramid", command=lambda: self.pyramidTest()
-        ).pack(fill="both")
-        ttk.Button(
-            self.mainWindow, text="HSV", command=lambda: self.hsvTest()
-        ).pack(fill="both")
+        def buttonFactory(text: str, command: Callable[[], None]): return ttk.Button(
+            self.mainWindow, text=text, command=command)
+        uis: list[tk.Widget] = [
+            buttonFactory("channel test", lambda:self.channelTest()),
+            buttonFactory("pyramid", lambda:self.pyramidTest()),
+            buttonFactory("HSV", lambda:self.hsvTest()),
+        ]
+        for ui in uis:
+            ui.pack(fill='both')
+
         self.windows = []
         self.mainWindow.mainloop()
 

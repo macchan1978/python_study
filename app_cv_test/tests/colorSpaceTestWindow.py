@@ -20,15 +20,17 @@ class ColorSpaceTestWindow:
 
         self.openFile()
 
-
     def createImageUi(self, imageUi):
-        self.canvasOriginal = CanvasWithImage(tk.Canvas(
+        def canvasFactory(): return CanvasWithImage(tk.Canvas(
             imageUi, width=300, height=200, bg='white'))
-        self.canvasOriginal.canvas.pack(side='left')
-
-        self.canvasProcessed = CanvasWithImage(tk.Canvas(
-            imageUi, width=300, height=200, bg='white'))
-        self.canvasProcessed.canvas.pack(side='left')
+        canvases: list[CanvasWithImage] = [
+            canvasFactory(),
+            canvasFactory()
+        ]
+        for canvas in canvases:
+            canvas.canvas.pack(sid='left')
+        self.canvasOriginal = canvases[0]
+        self.canvasProcessed = canvases[1]
 
     def createButtonUi(self, buttonUi):
         # MEMO : **演算子を使うことで複数箇所に設定するキーワード引数をDRY化できる。
@@ -50,7 +52,6 @@ class ColorSpaceTestWindow:
             buttonUi, text='apply', command=lambda: self.apply()
         )
         applyButton.pack(**opts)
-
 
     def openFile(self):
         filePath = askImageFile()

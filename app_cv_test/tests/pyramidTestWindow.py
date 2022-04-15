@@ -26,7 +26,6 @@ class PyramidTestWindow:
         self.createImageUi(frames[1])
 
     def createButtonUi(self, frameUpper: tk.Widget):
-
         uis: list[tk.Widget] = [
             label := ttk.Label(frameUpper, text="Hello World!"),
             ttk.Button(frameUpper, text="inc", command=lambda: self.incPyr()),
@@ -45,11 +44,11 @@ class PyramidTestWindow:
         self.checkButton = checkBtn
 
     def createImageUi(self, frameLower: tk.Widget):
-        def factory(): return CanvasWithImage(tk.Canvas(
+        def canvasFactory(): return CanvasWithImage(tk.Canvas(
             master=frameLower, bg="White", highlightthickness=0))
         canvases: list[CanvasWithImage] = [
-            factory(),
-            factory()
+            canvasFactory(),
+            canvasFactory()
         ]
         for c in canvases:
             c.canvas.pack(side='left')
