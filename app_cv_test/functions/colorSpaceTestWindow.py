@@ -28,7 +28,7 @@ class ColorSpaceTestWindow:
             canvasFactory()
         ]
         for canvas in canvases:
-            canvas.canvas.pack(sid='left')
+            canvas.canvas.pack(side='left')
         self.canvasOriginal = canvases[0]
         self.canvasProcessed = canvases[1]
 

@@ -5,7 +5,7 @@ from typing import Callable
 import cv2
 
 from common import *
-from tests import *
+from functions import *
 
 
 class CvApp():
