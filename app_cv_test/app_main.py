@@ -12,12 +12,15 @@ class CvApp():
         self.mainWindow = tk.Tk()
 
         # ボタンを縦に並べておく
-        ttk.Button(self.mainWindow, text="channel test",
-                   command=lambda: self.channelTest()).pack(fill="both")
-        ttk.Button(self.mainWindow, text="pyramid",
-                   command=lambda: self.pyramidTest()).pack(fill="both")
-        ttk.Button(self.mainWindow, text="HSV",
-                   command=lambda: self.hsvTest()).pack(fill="both")
+        ttk.Button(
+            self.mainWindow, text="channel test", command=lambda: self.channelTest()
+        ).pack(fill="both")
+        ttk.Button(
+            self.mainWindow, text="pyramid", command=lambda: self.pyramidTest()
+        ).pack(fill="both")
+        ttk.Button(
+            self.mainWindow, text="HSV", command=lambda: self.hsvTest()
+        ).pack(fill="both")
         self.windows = []
         self.mainWindow.mainloop()
 
@@ -36,7 +39,6 @@ class CvApp():
             self.mainWindow, img, "original_image"))
         self.windows.append(ImageWindow(
             self.mainWindow, imgRbSwap, "red_blue_swap_image"))
-
 
     def hsvTest(self):
         self.windows.append(ColorSpaceTestWindow(self.mainWindow))

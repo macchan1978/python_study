@@ -7,20 +7,54 @@ from common import *
 
 class PyramidTestWindow:
     def __init__(self, parent: tk.Tk):
-        self.maxSize = Size(600, 400)
+        self.maxSize = Size(1000, 750)
         self.initialPyrLevel = 6
-        self._windows = win = tk.Toplevel(parent)
+        self.createUi(parent)
+        self.onOpenImageFile()
+
+    def createUi(self, parent):
+        win = tk.Toplevel(parent)
         win.title('Pyramid Test Window')
 
-        frameUpper = ttk.Frame(win,)
-        frameUpper.pack(anchor='nw')
-        self.createButtonUi(frameUpper)
+        frames: list[ttk.Frame] = [
+            ttk.Frame(win),
+            ttk.Frame(win)
+        ]
+        for frame in frames:
+            frame.pack(anchor='nw')
+        self.createButtonUi(frames[0])
+        self.createImageUi(frames[1])
 
-        frameLower = ttk.Frame(win)
-        frameLower.pack()
-        self.createImageUi(frameLower)
+    def createButtonUi(self, frameUpper: tk.Widget):
 
-        self.onOpenImageFile()
+        uis: list[tk.Widget] = [
+            label := ttk.Label(frameUpper, text="Hello World!"),
+            ttk.Button(frameUpper, text="inc", command=lambda: self.incPyr()),
+            ttk.Button(frameUpper, text="dec", command=lambda: self.decPyr()),
+            checkBtn := ttk.Checkbutton(
+                frameUpper, text='show hint', command=lambda:self.processPyramid()),
+            ttk.Label(frameUpper, text="      "),
+            ttk.Button(
+                frameUpper, text="open", command=lambda: self.onOpenImageFile())
+        ]
+        for ui in uis:
+            ui.pack(side='left')
+        self.label = label
+        #MEMO : Checkbuttonの初期値は 'alternate' なのでそのキャンセルが必要。
+        checkBtn.state(['!alternate','selected'])
+        self.checkButton = checkBtn
+
+    def createImageUi(self, frameLower: tk.Widget):
+        def factory(): return CanvasWithImage(tk.Canvas(
+            master=frameLower, bg="White", highlightthickness=0))
+        canvases: list[CanvasWithImage] = [
+            factory(),
+            factory()
+        ]
+        for c in canvases:
+            c.canvas.pack(side='left')
+        self.canvasPyrUp = canvases[0]
+        self.canvasPyrDown = canvases[1]
 
     def openImageFile(self, filePath: str):
         self.pyrLevel = self.initialPyrLevel
@@ -34,37 +68,6 @@ class PyramidTestWindow:
         # cv2.imread('app_cv_test/images/cat_image.jpg')
         self.image = resizedImg
         self.processPyramid()
-
-    def createImageUi(self, frameLower: tk.Widget):
-        self.canvasPyrUp = CanvasWithImage(tk.Canvas(
-            master=frameLower, bg="White", highlightthickness=0))
-        self.canvasPyrUp.canvas.pack(side='left')
-
-        self.canvasPyrDown = CanvasWithImage(tk.Canvas(
-            master=frameLower, bg="White", highlightthickness=0))
-        self.canvasPyrDown.canvas.pack(side='left')
-
-    def createButtonUi(self, frameUpper: tk.Widget):
-        sideLeft = {'side': 'left'}
-        self.label = label = ttk.Label(frameUpper, text="Hello World!")
-        label.pack(**sideLeft)
-
-        ttk.Button(
-            frameUpper, text="inc", command=lambda: self.incPyr()
-        ).pack(**sideLeft)
-
-        ttk.Button(
-            frameUpper, text="dec", command=lambda: self.decPyr()
-        ).pack(**sideLeft)
-
-        # ただのスペース
-        ttk.Label(
-            frameUpper, text="      "
-        ).pack(**sideLeft)
-
-        ttk.Button(
-            frameUpper, text="open", command=lambda: self.onOpenImageFile()
-        ).pack(**sideLeft)
 
     def onOpenImageFile(self):
         filePath = askImageFile()
@@ -80,6 +83,11 @@ class PyramidTestWindow:
         for i in range(self.pyrLevel):
             pyrImage = cv2.pyrDown(pyrImage)
         self.canvasPyrDown.setImage(pyrImage)
+        if self.checkButton.instate(['selected']):
+            #TODO : pack()し直しのときにキーワード引数を再度設定するのがスマートではない。hide,showのユーティリティクラスが欲しい。
+            self.canvasPyrDown.canvas.pack(side='left')
+        else:
+            self.canvasPyrDown.canvas.pack_forget()
 
         for i in range(self.pyrLevel):
             pyrImage = cv2.pyrUp(pyrImage)

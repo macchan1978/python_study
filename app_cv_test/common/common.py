@@ -59,6 +59,6 @@ def askImageFile() -> Optional[str]:
     """
     result = filedialog.askopenfile(
         initialfile='/Users/shingo/dev/python/python_study/app_cv_test/images/soccer.jpg',
-        filetypes=[("Image file", ".jpg .png .tiff .tif")],
+        filetypes=[("Image file", ".jpg .jpeg .png .tiff .tif")],
         initialdir='/Users/shingo/dev/python/python_study/app_cv_test/images')
     return None if result is None else result.name
