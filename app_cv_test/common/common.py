@@ -1,6 +1,8 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
+from tkinter import filedialog
+from typing import Optional
 import cv2
 from PIL import Image, ImageTk
 
@@ -30,10 +32,11 @@ class CanvasWithImage:
     tk.Canvasにセットするimageは誰かが保持しないと破棄されてしまう。
     それを防ぐために画像をCanvasとペアで保持するためのユーティリティクラス。
     """
-    def __init__(self, canvas:tk.Canvas):
+
+    def __init__(self, canvas: tk.Canvas):
         self.canvas = canvas
 
-    def setImage(self, image:cv2.Mat)->None:
+    def setImage(self, image: cv2.Mat) -> None:
         self.canvas["width"] = image.shape[1]
         self.canvas["height"] = image.shape[0]
         self.imageHolder = fluent.setCanvasImage(image, self.canvas)
@@ -50,3 +53,9 @@ class ImageWindow:
         self.canvas.setImage(image)
 
 
+def askImageFile() -> Optional[str]:
+    result = filedialog.askopenfile(
+        initialfile='/Users/shingo/dev/python/python_study/app_cv_test/images/soccer.jpg',
+        filetypes=[("Image file", ".jpg .png .tiff .tif")],
+        initialdir='/Users/shingo/dev/python/python_study/app_cv_test/images')
+    return None if result is None else result.name

@@ -64,14 +64,10 @@ class PyramidTestWindow:
         ).pack(**sideLeft)
 
     def onOpenImageFile(self):
-        # TODO : 画像パスのユーティリティ化
-        result = filedialog.askopenfile(
-            initialfile='/Users/shingo/dev/python/python_study/app_cv_test/images/soccer.jpg',
-            filetypes=[("Image file", ".jpg .png .tiff .tif")],
-            initialdir='/Users/shingo/dev/python/python_study/app_cv_test/images')
-        if result is None:
+        filePath = askImageFile()
+        if filePath is None:
             return
-        self.openImageFile(result.name)
+        self.openImageFile(filePath)
 
     def processPyramid(self):
         self.label['text'] = f'Pyramid level : {self.pyrLevel}'
