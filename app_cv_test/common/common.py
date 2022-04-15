@@ -52,6 +52,8 @@ class ImageWindow:
         self.canvas.canvas.pack()
         self.canvas.setImage(image)
 
+def getDefaultImageFilePath()->str:
+    return '/Users/shingo/dev/python/python_study/app_cv_test/images/soccer.jpg'
 
 def askImageFile() -> Optional[str]:
     """

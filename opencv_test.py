@@ -5,6 +5,8 @@ import math
 import numpy as np
 from matplotlib import pyplot as plt
 
+from app_cv_test.common import *
+
 
 def show_image(title, img, destroy_all=True):
     cv2.imshow(title, img)
@@ -44,33 +46,47 @@ class ImageWindowUtil:
             cv2.moveWindow(img[0], x, y)
 
 
-def copyPasteImage(src: cv2.Mat, dst: cv2.Mat, x: int, y: int):
-    rows, cols, _ = src.shape
-    dst[y:y+rows, x:x+cols] = src
-    pass
+def thresholdTest():
+    imgUtil = ImageWindowUtil(paddingX=50, paddingY=30)
+    filePath = askImageFile()
+    if not filePath:return
+    img = cv2.imread(
+        filePath,
+        cv2.IMREAD_GRAYSCALE)
+    imgUtil.append('original', img)
+    ret1, th1 = cv2.threshold(img, 127, 255, cv2.THRESH_BINARY)
+    imgUtil.append('basic', th1)
+    ret2, th2 = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    imgUtil.append('otsu', th2)
+    blur = cv2.GaussianBlur(img,(5,5),0)
+    ret3, th3 = cv2.threshold(blur, 0,255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+    imgUtil.append('otsu with gaussian', th3)
+    cv2.waitKey(0)
+
+    exit()
 
 
-imgUtil = ImageWindowUtil(paddingX=50, paddingY=30)
-img = cv2.imread('images/soccer.jpg')
-imgUtil.append('soccer', img)
-b, g, r = cv2.split(img)
+thresholdTest()
 
-# imgUtil.append('soccer-R', r)
-# imgUtil.append('soccer-G', g)
-# imgUtil.append('soccer-B', b)
-img2 = cv2.merge((b, g, r))
-imgUtil.append('soccer-BRSwap', img2)
-g[:,:]=0
-b[:,:]=0
-img3 = cv2.merge((b, g, r))
-imgUtil.append('soccer-RedOnly', img3)
-img4 = cv2.copyMakeBorder(img,150,150,150,150,cv2.BORDER_REFLECT_101)
-imgUtil.append('soccer-border', img4)
-cv2.waitKey(0)
-exit()
+
+def rotationTest():
+    imgUtil = ImageWindowUtil(paddingX=50, paddingY=30)
+    image = cv2.imread(askImageFile())
+    imgUtil.append('original', image)
+    rows, cols, _ = image.shape
+    for angle in range(0, 90, 5):
+        rot = cv2.getRotationMatrix2D((cols/2.0, rows/2.0), angle, 1)
+        rotated = cv2.warpAffine(image, rot, (cols, rows))
+        imgUtil.append(f'rotation {angle}', rotated)
+    cv2.waitKey(0)
+    exit()
 
 
 def catEyeTest():
+    def copyPasteImage(src: cv2.Mat, dst: cv2.Mat, x: int, y: int):
+        rows, cols, _ = src.shape
+        dst[y:y+rows, x:x+cols] = src
+        pass
     imgUtil = ImageWindowUtil(paddingX=50, paddingY=30)
     img = cv2.imread('images/cat_image.jpeg')
     print(img.shape)
@@ -85,7 +101,6 @@ def catEyeTest():
     imgUtil.append('test', img)
     cv2.waitKey(0)
     exit()
-
 
 
 # -----------------------------------------------------------------------
