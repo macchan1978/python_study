@@ -18,6 +18,9 @@ class ColorSpaceTestWindow:
         imageUi = fluent.pack(ttk.Frame(win))
         self.createImageUi(imageUi)
 
+        self.openFile()
+
+
     def createImageUi(self, imageUi):
         self.canvasOriginal = CanvasWithImage(tk.Canvas(
             imageUi, width=300, height=200, bg='white'))
@@ -47,6 +50,7 @@ class ColorSpaceTestWindow:
             buttonUi, text='apply', command=lambda: self.apply()
         )
         applyButton.pack(**opts)
+
 
     def openFile(self):
         filePath = askImageFile()
