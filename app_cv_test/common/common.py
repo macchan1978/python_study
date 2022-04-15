@@ -25,18 +25,28 @@ class Size:
         self.height = height
 
 
-class ImageWindow:
-    def __init__(self, parent: tk.Tk, image: cv2.Mat, title: str = 'New Window', width: int = 0, height: int = 0):
-        width = image.shape[1] if width == 0 else width
-        height = image.shape[0] if height == 0 else height
+class CanvasWithImage:
+    """
+    tk.Canvasにセットするimageは誰かが保持しないと破棄されてしまう。
+    それを防ぐために画像をCanvasとペアで保持するためのユーティリティクラス。
+    """
+    def __init__(self, canvas:tk.Canvas):
+        self.canvas = canvas
 
+    def setImage(self, image:cv2.Mat)->None:
+        self.canvas["width"] = image.shape[1]
+        self.canvas["height"] = image.shape[0]
+        self.imageHolder = fluent.setCanvasImage(image, self.canvas)
+
+
+class ImageWindow:
+    def __init__(self, parent: tk.Tk, image: cv2.Mat, title: str = 'New Window'):
         window = tk.Toplevel(parent)
         window.title(title)
-        # MEMO : highlightthicknessを0にしないと(0,0)から有効に使えない
-        canvas = fluent.pack(
-            tk.Canvas(window, highlightthickness=0,
-                      width=width, height=height))
-        self.imgTk = fluent.setCanvasImage(image, canvas)
 
-        pass
+        # MEMO : highlightthicknessを0にしないと(0,0)から有効に使えない
+        self.canvas = CanvasWithImage(tk.Canvas(window, highlightthickness=0))
+        self.canvas.canvas.pack()
+        self.canvas.setImage(image)
+
 

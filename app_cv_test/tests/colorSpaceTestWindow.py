@@ -7,6 +7,7 @@ import cv2
 from common import *
 
 
+
 class ColorSpaceTestWindow:
     def __init__(self, parent: tk.Tk):
         win = tk.Toplevel(parent)
@@ -19,13 +20,13 @@ class ColorSpaceTestWindow:
         self.createImageUi(imageUi)
 
     def createImageUi(self, imageUi):
-        self.canvasOriginal = tk.Canvas(
-            imageUi, width=300, height=200, bg='white')
-        self.canvasOriginal.pack(side='left')
+        self.canvasOriginal = CanvasWithImage(tk.Canvas(
+            imageUi, width=300, height=200, bg='white'))
+        self.canvasOriginal.canvas.pack(side='left')
 
-        self.canvasProcessed = tk.Canvas(
-            imageUi, width=300, height=200, bg='white')
-        self.canvasProcessed.pack(side='left')
+        self.canvasProcessed = CanvasWithImage(tk.Canvas(
+            imageUi, width=300, height=200, bg='white'))
+        self.canvasProcessed.canvas.pack(side='left')
 
     def createButtonUi(self, buttonUi):
         # MEMO : **演算子を使うことで複数箇所に設定するキーワード引数をDRY化できる。
@@ -57,10 +58,7 @@ class ColorSpaceTestWindow:
         if result is None:
             return
         self.image = cv2.imread(result.name)
-        self.canvasOriginal["width"] = self.image.shape[1]
-        self.canvasOriginal["height"] = self.image.shape[0]
-        self.canvasImageOriginal = fluent.setCanvasImage(
-            self.image, self.canvasOriginal)
+        self.canvasOriginal.setImage(self.image)
         self.processImage()
 
         pass
@@ -81,10 +79,7 @@ class ColorSpaceTestWindow:
         # Bitwise-AND mask and original image
         res = cv2.bitwise_and(image, image, mask=mask)
 
-        self.canvasProcessed["width"] = image.shape[1]
-        self.canvasProcessed["height"] = image.shape[0]
-        self.canvasImageProcessed = fluent.setCanvasImage(
-            res, self.canvasProcessed)
+        self.canvasProcessed.setImage(res)
 
     def apply(self):
         self.processImage()
