@@ -50,7 +50,6 @@ class ColorSpaceTestWindow:
         applyButton.pack(**opts)
 
     def openFile(self):
-        print('openfile')
         result = filedialog.askopenfile(
             initialfile='/Users/shingo/dev/python/python_study/app_cv_test/images/soccer.jpg',
             filetypes=[("Image file", ".jpg .png .tiff .tif")],
@@ -61,7 +60,6 @@ class ColorSpaceTestWindow:
         self.canvasOriginal.setImage(self.image)
         self.processImage()
 
-        pass
 
     def processImage(self):
         image = self.image.copy()
