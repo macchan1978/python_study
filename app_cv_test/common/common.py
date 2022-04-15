@@ -54,6 +54,9 @@ class ImageWindow:
 
 
 def askImageFile() -> Optional[str]:
+    """
+    テスト用画像を選択するダイアログ。
+    """
     result = filedialog.askopenfile(
         initialfile='/Users/shingo/dev/python/python_study/app_cv_test/images/soccer.jpg',
         filetypes=[("Image file", ".jpg .png .tiff .tif")],

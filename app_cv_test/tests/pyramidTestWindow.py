@@ -1,7 +1,6 @@
 from __future__ import annotations
 import tkinter as tk
 from tkinter import ttk
-from tkinter import filedialog
 import cv2
 from common import *
 
@@ -23,8 +22,7 @@ class PyramidTestWindow:
 
         self.onOpenImageFile()
 
-
-    def openImageFile(self, filePath:str):
+    def openImageFile(self, filePath: str):
         self.pyrLevel = self.initialPyrLevel
         img = cv2.imread(filePath)
         # 適切な縮小比率を計算
@@ -39,11 +37,11 @@ class PyramidTestWindow:
 
     def createImageUi(self, frameLower: tk.Widget):
         self.canvasPyrUp = CanvasWithImage(tk.Canvas(
-            master=frameLower, bg="White"))
+            master=frameLower, bg="White", highlightthickness=0))
         self.canvasPyrUp.canvas.pack(side='left')
 
         self.canvasPyrDown = CanvasWithImage(tk.Canvas(
-            master=frameLower, bg="White"))
+            master=frameLower, bg="White", highlightthickness=0))
         self.canvasPyrDown.canvas.pack(side='left')
 
     def createButtonUi(self, frameUpper: tk.Widget):
@@ -57,6 +55,11 @@ class PyramidTestWindow:
 
         ttk.Button(
             frameUpper, text="dec", command=lambda: self.decPyr()
+        ).pack(**sideLeft)
+
+        # ただのスペース
+        ttk.Label(
+            frameUpper, text="      "
         ).pack(**sideLeft)
 
         ttk.Button(
