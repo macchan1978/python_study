@@ -16,30 +16,37 @@ class ColorSpaceTestWindow:
         self.createButtonUi(buttonUi)
 
         imageUi = fluent.pack(ttk.Frame(win))
-        self.canvas = fluent.pack(
-            tk.Canvas(imageUi, width=300, height=200, bg='white'))
+        self.createImageUi(imageUi)
+
+    def createImageUi(self, imageUi):
+        self.canvasOriginal = tk.Canvas(
+            imageUi, width=300, height=200, bg='white')
+        self.canvasOriginal.pack(side='left')
+
+        self.canvasProcessed = tk.Canvas(
+            imageUi, width=300, height=200, bg='white')
+        self.canvasProcessed.pack(side='left')
 
     def createButtonUi(self, buttonUi):
         # MEMO : **演算子を使うことで複数箇所に設定するキーワード引数をDRY化できる。
         opts = {'side': 'left'}
-        fluent.pack(ttk.Button(
-            buttonUi,
-            text='open', command=lambda: self.openFile()),
-            **opts)
-        self.textBoxColor = fluent.pack(ttk.Entry(
-            buttonUi,
-            width=10),
-            **opts)
+
+        openButton = ttk.Button(
+            buttonUi, text='open', command=lambda: self.openFile())
+        openButton.pack(**opts)
+
+        self.textBoxColor = ttk.Entry(buttonUi, width=10)
+        self.textBoxColor.pack(**opts)
         self.textBoxColor.insert(tk.END, '120')
-        self.textBoxColorRange = fluent.pack(ttk.Entry(
-            buttonUi,
-            width=10),
-            **opts)
+
+        self.textBoxColorRange = ttk.Entry(buttonUi, width=10)
+        self.textBoxColorRange.pack(**opts)
         self.textBoxColorRange.insert(tk.END, '10')
-        fluent.pack(ttk.Button(
-            buttonUi,
-            text='apply', command=lambda: self.apply()),
-            **opts)
+
+        applyButton = ttk.Button(
+            buttonUi, text='apply', command=lambda: self.apply()
+        )
+        applyButton.pack(**opts)
 
     def openFile(self):
         print('openfile')
@@ -50,6 +57,10 @@ class ColorSpaceTestWindow:
         if result is None:
             return
         self.image = cv2.imread(result.name)
+        self.canvasOriginal["width"] = self.image.shape[1]
+        self.canvasOriginal["height"] = self.image.shape[0]
+        self.canvasImageOriginal = fluent.setCanvasImage(
+            self.image, self.canvasOriginal)
         self.processImage()
 
         pass
@@ -70,9 +81,10 @@ class ColorSpaceTestWindow:
         # Bitwise-AND mask and original image
         res = cv2.bitwise_and(image, image, mask=mask)
 
-        self.canvas["width"] = image.shape[1]
-        self.canvas["height"] = image.shape[0]
-        self.canvasImage = fluent.setCanvasImage(res, self.canvas)
+        self.canvasProcessed["width"] = image.shape[1]
+        self.canvasProcessed["height"] = image.shape[0]
+        self.canvasImageProcessed = fluent.setCanvasImage(
+            res, self.canvasProcessed)
 
     def apply(self):
         self.processImage()
