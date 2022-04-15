@@ -14,7 +14,10 @@ class PyramidTestWindow:
 
         # 解像度変更UI
         frameUpper = ttk.Frame(win)
-        frameUpper.pack(anchor='ne')
+        kwargs = {'anchor':'ne'}
+
+        frameUpper.pack(**kwargs)
+        #frameUpper.pack(anchor='ne')
 
         self.label = label = ttk.Label(frameUpper, text="Hello World!")
         label.grid(column=0, row=0)
