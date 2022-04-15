@@ -44,6 +44,7 @@ class ColorSpaceTestWindow:
     def openFile(self):
         print('openfile')
         result = filedialog.askopenfile(
+            initialfile='/Users/shingo/dev/python/python_study/app_cv_test/images/soccer.jpg',
             filetypes=[("Image file", ".jpg .png .tiff .tif")],
             initialdir='/Users/shingo/dev/python/python_study/app_cv_test/images')
         if result is None:
