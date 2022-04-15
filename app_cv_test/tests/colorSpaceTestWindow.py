@@ -7,7 +7,6 @@ import cv2
 from common import *
 
 
-
 class ColorSpaceTestWindow:
     def __init__(self, parent: tk.Tk):
         win = tk.Toplevel(parent)
@@ -50,16 +49,12 @@ class ColorSpaceTestWindow:
         applyButton.pack(**opts)
 
     def openFile(self):
-        result = filedialog.askopenfile(
-            initialfile='/Users/shingo/dev/python/python_study/app_cv_test/images/soccer.jpg',
-            filetypes=[("Image file", ".jpg .png .tiff .tif")],
-            initialdir='/Users/shingo/dev/python/python_study/app_cv_test/images')
-        if result is None:
+        filePath = askImageFile()
+        if filePath is None:
             return
-        self.image = cv2.imread(result.name)
+        self.image = cv2.imread(filePath)
         self.canvasOriginal.setImage(self.image)
         self.processImage()
-
 
     def processImage(self):
         image = self.image.copy()
