@@ -18,6 +18,7 @@ class CvApp():
             buttonFactory("channel test", lambda:self.channelTest()),
             buttonFactory("pyramid", lambda:self.pyramidTest()),
             buttonFactory("HSV", lambda:self.hsvTest()),
+            buttonFactory("WebCam", lambda:self.webCamTest())
         ]
         for ui in uis:
             ui.pack(fill='both')
@@ -44,5 +45,7 @@ class CvApp():
     def hsvTest(self):
         self.windows.append(ColorSpaceTestWindow(self.mainWindow))
 
+    def webCamTest(self):
+        self.windows.append(WebCamWindow(self.mainWindow))
 
 app = CvApp()
